@@ -5,7 +5,7 @@ type Monitor interface {
 }
 
 type Config struct {
-	Name string
+	Name string `json:"name"`
 }
 
 type StatusEnum string
@@ -17,6 +17,6 @@ const (
 )
 
 type Status struct {
-	Config Config
-	Status StatusEnum
+	Config *Config    `json:"config,omitempty"`
+	Status StatusEnum `json:"status"`
 }

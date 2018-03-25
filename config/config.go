@@ -7,9 +7,9 @@ import (
 )
 
 type ConfigStruct struct {
-	Debug           bool
-	ServeAddress    string
-	ConfigDirectory string
+	Debug            bool
+	ServeAddress     string
+	ScriptsDirectory string
 }
 
 // Config points to the current config struct used by the other parts of the
@@ -19,8 +19,9 @@ var Config *ConfigStruct = Default()
 // Default returns the default config.
 func Default() *ConfigStruct {
 	conf := &ConfigStruct{
-		Debug:        false,
-		ServeAddress: "127.0.0.1:8118",
+		Debug:            false,
+		ServeAddress:     "127.0.0.1:8118",
+		ScriptsDirectory: "/path/to/scripts/directory",
 	}
 	return conf
 }

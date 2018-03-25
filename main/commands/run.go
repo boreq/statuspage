@@ -20,9 +20,8 @@ func runRun(c guinea.Context) error {
 		return err
 	}
 
-	m := monitor.New(config.Config.ConfigDirectory)
+	m := monitor.New(config.Config.ScriptsDirectory)
 
-	// Serve the collected data
 	if err := server.Serve(m, config.Config.ServeAddress); err != nil {
 		return err
 	}
