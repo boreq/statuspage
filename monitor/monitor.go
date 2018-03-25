@@ -1,6 +1,6 @@
 package monitor
 
-func New() Monitor {
+func New(configDirectory string) Monitor {
 	rv := &monitor{}
 	return rv
 }

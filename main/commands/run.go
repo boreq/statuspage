@@ -3,6 +3,8 @@ package commands
 import (
 	"github.com/boreq/guinea"
 	"github.com/boreq/statuspage-backend/config"
+	"github.com/boreq/statuspage-backend/monitor"
+	"github.com/boreq/statuspage-backend/server"
 )
 
 var runCmd = guinea.Command{
@@ -15,11 +17,13 @@ var runCmd = guinea.Command{
 
 func runRun(c guinea.Context) error {
 	if err := config.Load(c.Arguments[0]); err != nil {
-		return nil, err
+		return err
 	}
 
+	m := monitor.New(config.Config.ConfigDirectory)
+
 	// Serve the collected data
-	if err := server.Serve(aggr, config.Config.ServeAddress); err != nil {
+	if err := server.Serve(m, config.Config.ServeAddress); err != nil {
 		return err
 	}
 

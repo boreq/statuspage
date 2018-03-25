@@ -7,9 +7,9 @@ import (
 )
 
 type ConfigStruct struct {
-	Debug            bool
-	ServeAddress     string
-	ScriptsDirectory string
+	Debug           bool
+	ServeAddress    string
+	ConfigDirectory string
 }
 
 // Config points to the current config struct used by the other parts of the
