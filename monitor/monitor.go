@@ -25,6 +25,7 @@ func New(scriptsDirectory string) Monitor {
 type monitor struct {
 	scriptsDirectory string
 	status           map[string]Status
+	statusMutex      sync.Mutex
 }
 
 func (m *monitor) run() {
@@ -96,6 +97,8 @@ func (m *monitor) execute(filename string) error {
 		status.Status = DOWN
 	}
 
+	m.statusMutex.Lock()
+	defer m.statusMutex.Unlock()
 	m.status[scriptFilename] = status
 
 	return nil
