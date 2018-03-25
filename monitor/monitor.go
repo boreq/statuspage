@@ -50,14 +50,14 @@ func (m *monitor) rerun() {
 		if strings.HasSuffix(f.Name(), ".json") {
 			filenames = append(filenames, getScriptName(f.Name()))
 			wg.Add(1)
-			go func() {
+			go func(filename string) {
 				defer wg.Done()
-				err := m.execute(f.Name())
+				err := m.execute(filename)
 				if err != nil {
 					log.Printf("Error: %s", err)
-					m.status[getScriptName(f.Name())] = Status{Status: FAILURE}
+					m.status[getScriptName(filename)] = Status{Status: FAILURE}
 				}
-			}()
+			}(f.Name())
 		}
 	}
 	wg.Wait()
