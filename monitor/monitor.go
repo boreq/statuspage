@@ -2,6 +2,7 @@ package monitor
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/boreq/statuspage-backend/logging"
 	"io/ioutil"
 	"os/exec"
@@ -90,7 +91,14 @@ func (m *monitor) execute(filename string) error {
 	scriptFilename := getScriptName(filename)
 	cmd := exec.Command(getScriptName(pth))
 	log.Debugf("Running %s", pth)
-	err = cmd.Run()
+	output, err := cmd.Output()
+	if err == exec.ErrNotFound {
+		return err
+	}
+
+	status.Output = new(string)
+	*status.Output = fmt.Sprintf("%s", output)
+
 	if err == nil {
 		status.Status = UP
 	} else {

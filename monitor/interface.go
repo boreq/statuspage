@@ -18,5 +18,6 @@ const (
 
 type Status struct {
 	Config *Config    `json:"config,omitempty"`
+	Output *string    `json:"output,omitempty"`
 	Status StatusEnum `json:"status"`
 }
