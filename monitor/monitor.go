@@ -14,26 +14,27 @@ import (
 
 var log = logging.GetLogger("monitor")
 
-func New(scriptsDirectory string) Monitor {
+func New(scriptsDirectory string, updateEverySeconds int) Monitor {
 	rv := &monitor{
-		scriptsDirectory: scriptsDirectory,
-		status:           make(map[string]Status),
+		scriptsDirectory:   scriptsDirectory,
+		updateEverySeconds: updateEverySeconds,
+		status:             make(map[string]Status),
 	}
 	go rv.run()
 	return rv
 }
 
 type monitor struct {
-	scriptsDirectory string
-	status           map[string]Status
-	statusMutex      sync.Mutex
+	scriptsDirectory   string
+	updateEverySeconds int
+	status             map[string]Status
+	statusMutex        sync.Mutex
 }
 
 func (m *monitor) run() {
 	m.rerun()
 
-	t := time.NewTicker(15 * time.Second)
-
+	t := time.NewTicker(time.Duration(m.updateEverySeconds) * time.Second)
 	for range t.C {
 		m.rerun()
 	}

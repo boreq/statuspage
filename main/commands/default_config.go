@@ -22,6 +22,10 @@ Debug
 ServeAddress
 	The server will listen on this address.
 	Allowed values: an address as defined by the Go standard library eg. ":8080".
+
+UpdateEverySeconds
+	How often the scripts are executed.
+	Allowed value: integer [seconds].
 	`,
 }
 

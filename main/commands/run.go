@@ -20,7 +20,7 @@ func runRun(c guinea.Context) error {
 		return err
 	}
 
-	m := monitor.New(config.Config.ScriptsDirectory)
+	m := monitor.New(config.Config.ScriptsDirectory, config.Config.UpdateEverySeconds)
 
 	if err := server.Serve(m, config.Config.ServeAddress); err != nil {
 		return err
