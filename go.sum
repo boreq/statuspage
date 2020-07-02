@@ -1,0 +1,4 @@
+github.com/boreq/guinea v0.0.0-20190708221159-3ac41d590565 h1:cnRj38picFpTzntweemUC2HVXdDfK8eVG02JBp74eYU=
+github.com/boreq/guinea v0.0.0-20190708221159-3ac41d590565/go.mod h1:CFnWRfNiBUlwMXBQFpRfWK8FVbXPqGmn1xHgl2d1Aig=
+github.com/julienschmidt/httprouter v1.3.0 h1:U0609e9tgbseu3rBINet9P48AI/D3oJs4dN7jwJOQ1U=
+github.com/julienschmidt/httprouter v1.3.0/go.mod h1:JR6WtHb+2LUe8TCKY3cZOxFyyO8IZAc4RVcycCCAKdM=
