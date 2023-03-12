@@ -28,4 +28,10 @@ bench:
 clean:
 	rm -rf ./build
 
-.PHONY: all build doc test test-verbose test-short bench clean
+tools:
+	go install github.com/tinylib/msgp
+
+generate:
+	go generate ./...
+
+.PHONY: all build doc test test-verbose test-short bench clean tools generate

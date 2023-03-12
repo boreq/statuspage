@@ -3,36 +3,36 @@ package config
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 )
 
 type ConfigStruct struct {
-	Debug              bool
-	ServeAddress       string
-	ScriptsDirectory   string
-	UpdateEverySeconds int
+	Debug            bool   `json:"debug"`
+	ServeAddress     string `json:"serveAddress"`
+	ScriptsDirectory string `json:"scriptsDirectory"`
+	DataDirectory    string `json:"dataDirectory"`
 }
 
 // Config points to the current config struct used by the other parts of the
 // program.
-var Config *ConfigStruct = Default()
+var Config = Default()
 
 // Default returns the default config.
 func Default() *ConfigStruct {
 	conf := &ConfigStruct{
-		Debug:              false,
-		ServeAddress:       "127.0.0.1:8118",
-		ScriptsDirectory:   "/path/to/scripts/directory",
-		UpdateEverySeconds: 30,
+		Debug:            false,
+		ServeAddress:     "127.0.0.1:8118",
+		ScriptsDirectory: "/path/to/scripts/directory",
+		DataDirectory:    "/path/to/data/directory",
 	}
 	return conf
 }
 
 // Load loads the config from the specified json file. If certain keys are not
-// present in the loaded config file the current values of the config struct
-// are preserved.
+// present in the loaded config file the current values of the config struct are
+// preserved.
 func Load(filename string) error {
-	content, err := ioutil.ReadFile(filename)
+	content, err := os.ReadFile(filename)
 	if err != nil {
 		return err
 	}

@@ -4,7 +4,7 @@ package main
 import (
 	"fmt"
 	"github.com/boreq/guinea"
-	"github.com/boreq/statuspage-backend/main/commands"
+	"github.com/boreq/statuspage-backend/cmd/statuspage/commands"
 	"os"
 )
 
