@@ -14,7 +14,7 @@ const (
 )
 
 const (
-	showUptimeFromTimePeriod = 90 // [days]
+	ShowUptimeFromTimePeriod = 90 // [days]
 )
 
 type Monitor struct {
@@ -64,7 +64,7 @@ func LoadMonitors(q *query.Query, r *monitor.Runner) ([]Monitor, error) {
 	monitors := make([]Monitor, 0)
 
 	end := query.NewDate(time.Now())
-	start := end.AddDate(0, 0, -showUptimeFromTimePeriod)
+	start := end.AddDate(0, 0, -ShowUptimeFromTimePeriod)
 
 	for _, monitor := range r.Monitors() {
 		monitor := monitor

@@ -1,0 +1,136 @@
+@import url('./fonts.css');
+
+$color-green: #00eb8b;
+$color-red: #F06292;
+$color-yellow: #FDD835;
+$color-grey: #8da2b5;
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+html {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: 'Roboto', sans-serif;
+    font-weight: $font-weight-regular;
+}
+
+body {
+    padding: 1rem;
+    background-color: #fff;
+}
+
+.frame {
+    border-radius: 4px;
+    color: #131a26;
+    border: 1px solid #E0E0E0;
+
+    .row {
+        padding: 2rem 1.5rem;
+        border-bottom: 1px solid #e6e7e8;
+
+        &.last-child {
+            border-bottom: none;
+        }
+    }
+}
+
+.monitors {
+    .monitor {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto 35px auto;
+        row-gap: .5em;
+        font-size: 14px;
+
+        grid-template-areas:
+            "name status"
+            "uptime uptime"
+            "timeline timeline";
+
+        .name {
+            grid-area: name;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
+            color: #637280;
+            font-weight: $font-weight-medium;
+        }
+
+        .uptime {
+            grid-area: uptime;
+            flex: 1;
+            display: flex;
+            align-items: stretch;
+
+            .indicator {
+                height: 100%;
+                flex: 1;
+                background-color: #ECF0F1;
+                margin: 0 2px;
+
+                &.red {
+                    background-color: $color-red;
+                }
+
+                &.green {
+                    background-color: $color-green;
+                }
+
+                &:first-child {
+                    margin-left: 0;
+                }
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .status {
+            grid-area: status;
+
+            &.up {
+                color: $color-green;
+            }
+
+            &.down {
+                color: $color-red;
+            }
+
+            &.failure {
+                color: $color-yellow;
+            }
+        }
+
+
+        .timeline {
+            display: flex;
+            grid-area: timeline;
+            align-items: center;
+
+            .time-past, .time-now {
+                color: $color-grey;
+                opacity: 0.5;
+            }
+
+            .time-past {
+                text-align: left;
+            }
+
+            .time-now {
+                text-align: right;
+            }
+
+            .line {
+                flex: 1;
+                height: 1px;
+                margin: 0 1rem;
+                background-color: $color-grey;
+                opacity: 0.3;
+            }
+        }
+    }
+}

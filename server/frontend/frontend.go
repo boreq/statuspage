@@ -29,11 +29,11 @@ func NewHandler(
 	r *monitor.Runner,
 ) (*Handler, error) {
 	var funcMap = template.FuncMap{
-		"MessageTypeSent": func() string { return "benis" },
-
 		"StatusUp":      func() string { return types.StatusUp },
 		"StatusDown":    func() string { return types.StatusDown },
 		"StatusFailure": func() string { return types.StatusFailure },
+
+		"DerefFloat64": func(v *float64) float64 { return *v },
 	}
 
 	tmpl, err := template.New("output").Funcs(funcMap).Parse(indexTemplate)
@@ -67,9 +67,11 @@ func (h *Handler) renderIndex(writer http.ResponseWriter, request *http.Request)
 	}
 
 	if err := h.tmpl.Execute(writer, struct {
-		Monitors []types.Monitor
+		NumberOfDays int
+		Monitors     []types.Monitor
 	}{
-		Monitors: monitors,
+		NumberOfDays: types.ShowUptimeFromTimePeriod,
+		Monitors:     monitors,
 	}); err != nil {
 		return errors.Wrap(err, "error executing the template")
 	}

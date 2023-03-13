@@ -6,16 +6,83 @@
 </head>
 
 <body>
-    <h1>
-        Test.
-    </h1>
+    {{ $all_operational := true }}
 
-    <div class="peers">
-        {{ range .Monitors }}
-            {{ . }}
-        {{else}}
-            No monitors.
-        {{ end}}
+    {{ range .Monitors }}
+        {{ if .Status }}
+            {{ if eq .Status.Status StatusDown }}
+                {{ $all_operational = false }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+
+    <div class="wrapper">
+        <div class="frame">
+            <div class="monitors">
+                {{ range .Monitors }}
+                    <div class="row monitor">
+
+                        <div class="name">
+                            {{ .Name }}
+                        </div>
+
+                        <div class="uptime">
+                            {{ range .Uptimes }}
+                                <div class="indicator
+                                    {{- if .Uptime -}}
+                                        {{- if ge (DerefFloat64 .Uptime) 0.99 }}
+                                            green
+                                        {{- end -}}
+                                        {{- if lt (DerefFloat64 .Uptime) 0.99 }}
+                                            red
+                                        {{- end -}}
+                                    {{- end -}}
+                                ">
+
+                                </div>
+                            {{ end }}
+                        </div>
+
+                        {{ if .Status }}
+                            {{ if eq .Status.Status StatusUp }}
+                                <div class="status up">
+                                    Operational
+                                </div>
+                            {{ end }}
+                            {{ if eq .Status.Status StatusDown }}
+                                <div class="status down">
+                                    Down
+                                </div>
+                            {{ end }}
+                            {{ if eq .Status.Status StatusFailure }}
+                                <div class="status failure">
+                                    Monitoring failure
+                                </div>
+                            {{ end }}
+                        {{ else }}
+                            <div class="status failure">
+                                Unknown
+                            </div>
+                        {{ end }}
+
+                        <div class="timeline">
+                            <div class="time-past">
+                                {{ $.NumberOfDays }} days ago
+                            </div>
+
+                            <div class="line">
+                            </div>
+
+                            <div class="time-now">
+                                Today
+                            </div>
+                        </div>
+                    </div>
+                {{ else }}
+                    No monitors.
+                {{ end }}
+            </div>
+        </div>
     </div>
 </body>
 
