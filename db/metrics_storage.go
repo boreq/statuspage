@@ -121,14 +121,17 @@ func (s *MeasurementsStorage) get(txn *badger.Txn, id string, start, end query.D
 }
 
 func (s *MeasurementsStorage) last(txn *badger.Txn, id string) (monitor.Measurement, error) {
+	prefix := makeKey(id, nil)
+	seek := makeKey(id, []byte{0xff})
+
 	options := badger.DefaultIteratorOptions
 	options.Reverse = true
+	options.Prefix = prefix
 
 	iterator := txn.NewIterator(options)
 	defer iterator.Close()
 
-	iterator.Seek(makeKey(id, nil))
-
+	iterator.Seek(seek)
 	if !iterator.Valid() {
 		return monitor.Measurement{}, query.ErrMeasurementNotFound
 	}
