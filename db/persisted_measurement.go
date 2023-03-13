@@ -8,11 +8,12 @@ import (
 //go:generate msgp
 
 type PersistedMeasurement struct {
-	Id        string  `msg:"id"`
-	Timestamp int64   `msg:"timestamp"`
-	Duration  float64 `msg:"duration"`
-	Status    string  `msg:"status"`
-	Output    string  `msg:"string"`
+	Id          string  `msg:"id"`
+	UpdateEvery float64 `msg:"updateEvery"`
+	Timestamp   int64   `msg:"timestamp"`
+	Duration    float64 `msg:"duration"`
+	Status      string  `msg:"status"`
+	Output      string  `msg:"string"`
 }
 
 const (

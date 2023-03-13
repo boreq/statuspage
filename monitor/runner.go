@@ -94,6 +94,7 @@ func (m *Runner) rerun() error {
 
 				measurement, err = NewMeasurement(
 					monitor.Id(),
+					m.updateEvery,
 					start,
 					duration,
 					FAILURE,
@@ -109,6 +110,7 @@ func (m *Runner) rerun() error {
 
 				measurement, err = NewMeasurement(
 					monitor.Id(),
+					m.updateEvery,
 					start,
 					duration,
 					status,

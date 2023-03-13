@@ -30,6 +30,12 @@ func (z *PersistedMeasurement) DecodeMsg(dc *msgp.Reader) (err error) {
 				err = msgp.WrapError(err, "Id")
 				return
 			}
+		case "updateEvery":
+			z.UpdateEvery, err = dc.ReadFloat64()
+			if err != nil {
+				err = msgp.WrapError(err, "UpdateEvery")
+				return
+			}
 		case "timestamp":
 			z.Timestamp, err = dc.ReadInt64()
 			if err != nil {
@@ -67,15 +73,25 @@ func (z *PersistedMeasurement) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *PersistedMeasurement) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 5
+	// map header, size 6
 	// write "id"
-	err = en.Append(0x85, 0xa2, 0x69, 0x64)
+	err = en.Append(0x86, 0xa2, 0x69, 0x64)
 	if err != nil {
 		return
 	}
 	err = en.WriteString(z.Id)
 	if err != nil {
 		err = msgp.WrapError(err, "Id")
+		return
+	}
+	// write "updateEvery"
+	err = en.Append(0xab, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x76, 0x65, 0x72, 0x79)
+	if err != nil {
+		return
+	}
+	err = en.WriteFloat64(z.UpdateEvery)
+	if err != nil {
+		err = msgp.WrapError(err, "UpdateEvery")
 		return
 	}
 	// write "timestamp"
@@ -124,10 +140,13 @@ func (z *PersistedMeasurement) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *PersistedMeasurement) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 5
+	// map header, size 6
 	// string "id"
-	o = append(o, 0x85, 0xa2, 0x69, 0x64)
+	o = append(o, 0x86, 0xa2, 0x69, 0x64)
 	o = msgp.AppendString(o, z.Id)
+	// string "updateEvery"
+	o = append(o, 0xab, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x76, 0x65, 0x72, 0x79)
+	o = msgp.AppendFloat64(o, z.UpdateEvery)
 	// string "timestamp"
 	o = append(o, 0xa9, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70)
 	o = msgp.AppendInt64(o, z.Timestamp)
@@ -165,6 +184,12 @@ func (z *PersistedMeasurement) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			z.Id, bts, err = msgp.ReadStringBytes(bts)
 			if err != nil {
 				err = msgp.WrapError(err, "Id")
+				return
+			}
+		case "updateEvery":
+			z.UpdateEvery, bts, err = msgp.ReadFloat64Bytes(bts)
+			if err != nil {
+				err = msgp.WrapError(err, "UpdateEvery")
 				return
 			}
 		case "timestamp":
@@ -205,6 +230,6 @@ func (z *PersistedMeasurement) UnmarshalMsg(bts []byte) (o []byte, err error) {
 
 // Msgsize returns an upper bound estimate of the number of bytes occupied by the serialized message
 func (z *PersistedMeasurement) Msgsize() (s int) {
-	s = 1 + 3 + msgp.StringPrefixSize + len(z.Id) + 10 + msgp.Int64Size + 9 + msgp.Float64Size + 7 + msgp.StringPrefixSize + len(z.Status) + 7 + msgp.StringPrefixSize + len(z.Output)
+	s = 1 + 3 + msgp.StringPrefixSize + len(z.Id) + 12 + msgp.Float64Size + 10 + msgp.Int64Size + 9 + msgp.Float64Size + 7 + msgp.StringPrefixSize + len(z.Status) + 7 + msgp.StringPrefixSize + len(z.Output)
 	return
 }

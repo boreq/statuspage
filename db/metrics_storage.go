@@ -34,11 +34,12 @@ func (s *MeasurementsStorage) add(txn *badger.Txn, m monitor.Measurement) error 
 	}
 
 	persistedMeasurement := &PersistedMeasurement{
-		Id:        m.Id(),
-		Timestamp: m.Timestamp().Unix(),
-		Duration:  m.Duration().Seconds(),
-		Status:    persistedStatus,
-		Output:    m.Output(),
+		Id:          m.Id(),
+		UpdateEvery: m.UpdateEvery().Seconds(),
+		Timestamp:   m.Timestamp().Unix(),
+		Duration:    m.Duration().Seconds(),
+		Status:      persistedStatus,
+		Output:      m.Output(),
 	}
 
 	b, err := persistedMeasurement.MarshalMsg(nil)
@@ -150,8 +151,8 @@ func (s *MeasurementsStorage) load(item *badger.Item) (monitor.Measurement, erro
 	}
 
 	t := time.Unix(persistedMeasurement.Timestamp, 0)
-
 	d := time.Duration(persistedMeasurement.Duration) * time.Second
+	updateEvery := time.Duration(persistedMeasurement.UpdateEvery) * time.Second
 
 	status, err := decodeStatus(persistedMeasurement.Status)
 	if err != nil {
@@ -160,6 +161,7 @@ func (s *MeasurementsStorage) load(item *badger.Item) (monitor.Measurement, erro
 
 	measurement, err := monitor.NewMeasurement(
 		persistedMeasurement.Id,
+		updateEvery,
 		t,
 		d,
 		status,
