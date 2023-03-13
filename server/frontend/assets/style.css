@@ -87,9 +87,9 @@ header {
         animation: pulse-red 2s infinite; }
 @keyframes pulse-red {
   0% {
-    box-shadow: 0 0 0 0 rgba(240, 98, 146, 0.7); }
+    box-shadow: 0 0 0 0 #f06292; }
   70% {
-    box-shadow: 0 0 0 10px rgba(240, 98, 146, 0); }
+    box-shadow: 0 0 0 0.5rem rgba(240, 98, 146, 0); }
   100% {
     box-shadow: 0 0 0 0 rgba(240, 98, 146, 0); } }
     .monitors .monitor .status.failure {
@@ -99,17 +99,16 @@ header {
         animation: pulse-yellow 2s infinite; }
 @keyframes pulse-yellow {
   0% {
-    box-shadow: 0 0 0 0 rgba(253, 216, 53, 0.7); }
+    box-shadow: 0 0 0 0 #fdd835; }
   70% {
-    box-shadow: 0 0 0 10px rgba(253, 216, 53, 0); }
+    box-shadow: 0 0 0 0.5rem rgba(253, 216, 53, 0); }
   100% {
     box-shadow: 0 0 0 0 rgba(253, 216, 53, 0); } }
     .monitors .monitor .status .blob {
       border-radius: 50%;
-      margin: 10px;
-      height: 10px;
-      width: 10px;
-      box-shadow: 0 0 0 0 black; }
+      margin: 0.5rem;
+      height: 0.75rem;
+      width: 0.75rem; }
   .monitors .monitor .timeline {
     display: flex;
     grid-area: timeline;
