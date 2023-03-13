@@ -9,15 +9,34 @@ body {
   padding: 1rem;
   background-color: #fff; }
 
+header {
+  text-align: center;
+  margin: 3rem 1rem; }
+  header .wrapper img {
+    max-width: 100%; }
+
 .frame {
   border-radius: 4px;
   color: #131a26;
-  border: 1px solid #E0E0E0; }
+  border: 1px solid #E0E0E0;
+  margin: 2rem 0; }
   .frame .row {
     padding: 2rem 1.5rem;
     border-bottom: 1px solid #e6e7e8; }
-    .frame .row.last-child {
+    .frame .row:last-child {
       border-bottom: none; }
+
+.overall-status {
+  color: white; }
+  .overall-status.green {
+    background-color: #00eb8b;
+    border-color: #00eb8b; }
+  .overall-status.red {
+    background-color: #F06292;
+    border-color: #F06292; }
+  .overall-status .row {
+    padding: 1rem 1.5rem;
+    font-weight: 500; }
 
 .monitors .monitor {
   display: grid;
@@ -53,13 +72,44 @@ body {
       .monitors .monitor .uptime .indicator:last-child {
         margin-right: 0; }
   .monitors .monitor .status {
-    grid-area: status; }
+    grid-area: status;
+    font-weight: 500;
+    display: flex;
+    align-items: center; }
     .monitors .monitor .status.up {
       color: #00eb8b; }
+      .monitors .monitor .status.up .blob {
+        background-color: #00eb8b; }
     .monitors .monitor .status.down {
       color: #F06292; }
+      .monitors .monitor .status.down .blob {
+        background-color: #F06292;
+        animation: pulse-red 2s infinite; }
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(240, 98, 146, 0.7); }
+  70% {
+    box-shadow: 0 0 0 10px rgba(240, 98, 146, 0); }
+  100% {
+    box-shadow: 0 0 0 0 rgba(240, 98, 146, 0); } }
     .monitors .monitor .status.failure {
       color: #FDD835; }
+      .monitors .monitor .status.failure .blob {
+        background-color: #FDD835;
+        animation: pulse-yellow 2s infinite; }
+@keyframes pulse-yellow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(253, 216, 53, 0.7); }
+  70% {
+    box-shadow: 0 0 0 10px rgba(253, 216, 53, 0); }
+  100% {
+    box-shadow: 0 0 0 0 rgba(253, 216, 53, 0); } }
+    .monitors .monitor .status .blob {
+      border-radius: 50%;
+      margin: 10px;
+      height: 10px;
+      width: 10px;
+      box-shadow: 0 0 0 0 black; }
   .monitors .monitor .timeline {
     display: flex;
     grid-area: timeline;
@@ -77,3 +127,27 @@ body {
       margin: 0 1rem;
       background-color: #8da2b5;
       opacity: 0.3; }
+
+.tooltip {
+  position: relative; }
+
+.tooltip::before {
+  content: attr(tooltip);
+  display: inline-block;
+  position: absolute;
+  bottom: 100%;
+  background: #000;
+  color: #fff;
+  padding: .5rem;
+  border-radius: 4px;
+  opacity: 0;
+  transition: 0.1s;
+  overflow: hidden;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+  min-width: 5rem;
+  text-align: center; }
+
+.tooltip:hover::before {
+  opacity: 1; }

@@ -1,3 +1,19 @@
+{{ $all_operational := true }}
+{{ $all_down := true }}
+
+{{ range .Monitors }}
+    {{ if .Status }}
+        {{ if eq .Status.Status StatusDown StatusUp }}
+            {{ if eq .Status.Status StatusDown }}
+                {{ $all_operational = false }}
+            {{ end }}
+            {{ if eq .Status.Status StatusUp }}
+                {{ $all_down = false }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
 <!DOCTYPE html>
 <html>
 
@@ -6,15 +22,24 @@
 </head>
 
 <body>
-    {{ $all_operational := true }}
+    <header>
+        <div class="wrapper">
+            <img src="./assets/computr.jpeg">
+        </div>
+    </header>
 
-    {{ range .Monitors }}
-        {{ if .Status }}
-            {{ if eq .Status.Status StatusDown }}
-                {{ $all_operational = false }}
+    <div class="frame overall-status {{ if $all_operational }}green{{ else }}red{{ end }}">
+        <div class="row">
+            {{ if $all_operational }}
+                All Systems Operational
+            {{ else if $all_down }}
+                Experiencing An Outage
+            {{ else }}
+                Experiencing A Partial Outage
             {{ end }}
-        {{ end }}
-    {{ end }}
+        </div>
+    </div>
+
 
     <div class="wrapper">
         <div class="frame">
@@ -28,42 +53,41 @@
 
                         <div class="uptime">
                             {{ range .Uptimes }}
-                                <div class="indicator
+                                <div class="indicator tooltip
                                     {{- if .Uptime -}}
                                         {{- if ge (DerefFloat64 .Uptime) 0.99 }}
                                             green
-                                        {{- end -}}
-                                        {{- if lt (DerefFloat64 .Uptime) 0.99 }}
+                                        {{- else }}
                                             red
-                                        {{- end -}}
+                                        {{- end }}
+                                    {{- end -}}
+                                    " tooltip="{{ (Date .Date) }}
+                                    {{- if .Uptime }}
+                                        {{ (Percentage .Uptime) }}
+                                    {{- else }}
+                                        No data.
                                     {{- end -}}
                                 ">
-
                                 </div>
                             {{ end }}
                         </div>
 
-                        {{ if .Status }}
-                            {{ if eq .Status.Status StatusUp }}
-                                <div class="status up">
-                                    Operational
-                                </div>
-                            {{ end }}
-                            {{ if eq .Status.Status StatusDown }}
-                                <div class="status down">
-                                    Down
-                                </div>
-                            {{ end }}
-                            {{ if eq .Status.Status StatusFailure }}
-                                <div class="status failure">
-                                    Monitoring failure
-                                </div>
-                            {{ end }}
-                        {{ else }}
-                            <div class="status failure">
-                                Unknown
+                        <div class="status {{ if and .Status (eq .Status.Status StatusUp) }}up{{ else if and .Status (eq .Status.Status StatusDown) }}down{{ else }}failure{{ end }}">
+                            <div class="label">
+                                {{ if .Status }}
+                                    {{ if eq .Status.Status StatusUp }}
+                                            Operational
+                                    {{ else if eq .Status.Status StatusDown }}
+                                            Down
+                                    {{ else if eq .Status.Status StatusFailure }}
+                                            Monitoring failure
+                                    {{ end }}
+                                {{ else }}
+                                        Unknown
+                                {{ end }}
                             </div>
-                        {{ end }}
+                            <div class="blob"></div>
+                        </div>
 
                         <div class="timeline">
                             <div class="time-past">

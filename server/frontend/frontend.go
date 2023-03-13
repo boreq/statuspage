@@ -34,6 +34,9 @@ func NewHandler(
 		"StatusFailure": func() string { return types.StatusFailure },
 
 		"DerefFloat64": func(v *float64) float64 { return *v },
+
+		"Percentage": func(v float64) string { return fmt.Sprintf("%.2f%%", v*100) },
+		"Date":       func(v types.Date) string { return fmt.Sprintf("%d-%02d-%02d", v.Year, v.Month, v.Day) },
 	}
 
 	tmpl, err := template.New("output").Funcs(funcMap).Parse(indexTemplate)

@@ -101,7 +101,7 @@ func (q *Query) List(id string, start, end Date) ([]ListResult, error) {
 			Date: d,
 		}
 
-		if a, ok := aggr[d]; ok {
+		if a, ok := aggr[d]; ok && (a.Ups != 0 || a.Downs != 0) {
 			uptime := float64(a.Ups) / float64(a.Ups+a.Downs)
 			r.Uptime = &uptime
 		}
