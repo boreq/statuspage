@@ -2,6 +2,7 @@ package commands
 
 import (
 	"context"
+	"github.com/boreq/errors"
 	"github.com/boreq/guinea"
 	"github.com/boreq/statuspage-backend/config"
 	"github.com/boreq/statuspage-backend/db"
@@ -9,7 +10,6 @@ import (
 	"github.com/boreq/statuspage-backend/query"
 	"github.com/boreq/statuspage-backend/server"
 	"github.com/dgraph-io/badger"
-	"github.com/pkg/errors"
 )
 
 var runCmd = guinea.Command{

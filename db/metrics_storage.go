@@ -2,11 +2,11 @@ package db
 
 import (
 	"crypto/rand"
+	"github.com/boreq/errors"
 	"github.com/boreq/statuspage-backend/monitor"
 	"github.com/boreq/statuspage-backend/query"
 	"github.com/dgraph-io/badger"
 	"github.com/oklog/ulid/v2"
-	"github.com/pkg/errors"
 	"strings"
 	"time"
 )
@@ -63,12 +63,12 @@ func (s *MeasurementsStorage) Last(id string) (monitor.Measurement, error) {
 	if err := s.db.View(func(txn *badger.Txn) error {
 		tmp, err := s.last(txn, id)
 		if err != nil {
-			return errors.Wrap(err, "error calling get")
+			return errors.Wrap(err, "error calling last")
 		}
 		result = tmp
 		return nil
 	}); err != nil {
-		return monitor.Measurement{}, errors.Wrap(err, "error getting the measurements")
+		return monitor.Measurement{}, errors.Wrap(err, "transaction failed")
 	}
 	return result, nil
 }
@@ -83,7 +83,7 @@ func (s *MeasurementsStorage) Get(id string, start, end query.Date) ([]monitor.M
 		result = tmp
 		return nil
 	}); err != nil {
-		return nil, errors.Wrap(err, "error getting the measurements")
+		return nil, errors.Wrap(err, "transaction failed")
 	}
 	return result, nil
 }

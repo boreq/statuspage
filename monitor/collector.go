@@ -3,8 +3,8 @@ package monitor
 import (
 	"context"
 	"encoding/json"
+	"github.com/boreq/errors"
 	"github.com/boreq/statuspage-backend/logging"
-	"github.com/pkg/errors"
 	"os"
 	"os/exec"
 	"path"
