@@ -177,8 +177,15 @@ func (m *Runner) execute(monitor Monitor) (executionResult, error) {
 	log.Debugf("Running %s", monitor.scriptPath)
 
 	output, err := cmd.Output()
-	if err == exec.ErrNotFound {
-		return executionResult{}, errors.Wrap(err, "error executing a command")
+	if err != nil {
+		if err == exec.ErrNotFound {
+			return executionResult{}, errors.Wrap(err, "error executing a command")
+		}
+
+		exitErr := &exec.ExitError{}
+		if !errors.As(err, &exitErr) {
+			return executionResult{}, errors.Wrap(err, "exit error")
+		}
 	}
 
 	return executionResult{
