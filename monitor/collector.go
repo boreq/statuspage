@@ -160,7 +160,7 @@ func (m *Runner) loadMonitor(filename string) (Monitor, error) {
 	}
 
 	monitor, err := NewMonitor(
-		filename,
+		strings.TrimSuffix(filename, configPathSuffix),
 		c.Name,
 		configPath,
 		scriptPath,

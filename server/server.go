@@ -1,17 +1,16 @@
 package server
 
 import (
-	"errors"
+	"github.com/boreq/errors"
 	"github.com/boreq/statuspage-backend/logging"
 	"github.com/boreq/statuspage-backend/monitor"
 	"github.com/boreq/statuspage-backend/query"
 	"github.com/boreq/statuspage-backend/server/api"
+	"github.com/boreq/statuspage-backend/server/frontend"
+	"github.com/boreq/statuspage-backend/server/types"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"time"
 )
-
-const showUptimeFromTimePeriod = 90 // [days]
 
 var log = logging.GetLogger("server")
 
@@ -21,109 +20,34 @@ type handler struct {
 }
 
 func (h *handler) Monitors(r *http.Request, _ httprouter.Params) (interface{}, api.Error) {
-	end := query.NewDate(time.Now())
-	start := end.AddDate(0, 0, -showUptimeFromTimePeriod)
-
-	response := MonitorsResponse{
-		Monitors: make([]MonitorsResponseMonitor, 0),
+	monitors, err := types.LoadMonitors(h.q, h.r)
+	if err != nil {
+		log.Printf("Error loading monitors: %s", err)
+		return nil, api.InternalServerError
 	}
 
-	for _, monitor := range h.r.Monitors() {
-		monitor := monitor
-
-		v := MonitorsResponseMonitor{
-			Id:      monitor.Id(),
-			Name:    monitor.Name(),
-			Uptimes: make([]MonitorsResponseMonitorUptime, 0),
-		}
-
-		uptimes, err := h.q.List(monitor.Id(), start, end)
-		if err != nil {
-			log.Printf("Error listing: %s", err)
-			return nil, api.InternalServerError
-		}
-
-		for _, uptime := range uptimes {
-			uptime := uptime
-
-			v.Uptimes = append(v.Uptimes, MonitorsResponseMonitorUptime{
-				Date:   NewDate(uptime.Date),
-				Uptime: uptime.Uptime,
-			})
-		}
-
-		last, err := h.q.Latest(monitor.Id())
-		if err != nil {
-			if !errors.Is(err, query.ErrMeasurementNotFound) {
-				log.Printf("Error getting last: %s", err)
-				return nil, api.InternalServerError
-			}
-		} else {
-			v.Status = &MonitorsResponseMonitorStatus{
-				Timestamp: last.Timestamp.Unix(),
-				Status:    EncodeStatus(last.Status),
-			}
-		}
-
-		response.Monitors = append(response.Monitors, v)
+	response := MonitorsResponse{
+		Monitors: monitors,
 	}
 
 	return response, nil
 }
 
 type MonitorsResponse struct {
-	Monitors []MonitorsResponseMonitor
-}
-
-type MonitorsResponseMonitor struct {
-	Id      string
-	Name    string
-	Uptimes []MonitorsResponseMonitorUptime
-	Status  *MonitorsResponseMonitorStatus
-}
-
-type MonitorsResponseMonitorStatus struct {
-	Timestamp int64  `json:"timestamp"`
-	Status    string `json:"status"`
-}
-
-type MonitorsResponseMonitorUptime struct {
-	Date   Date     `json:"date"`
-	Uptime *float64 `json:"uptime"`
-}
-
-type Date struct {
-	Year  int `json:"year"`
-	Month int `json:"month"`
-	Day   int `json:"day"`
-}
-
-func NewDate(d query.Date) Date {
-	return Date{
-		Year:  d.Year,
-		Month: int(d.Month),
-		Day:   d.Day,
-	}
-}
-
-func EncodeStatus(status monitor.StatusEnum) string {
-	switch status {
-	case monitor.UP:
-		return "UP"
-	case monitor.DOWN:
-		return "DOWN"
-	case monitor.FAILURE:
-		return "FAILURE"
-	default:
-		panic("unknown status")
-	}
+	Monitors []types.Monitor
 }
 
 func Serve(q *query.Query, r *monitor.Runner, address string) error {
-	h := &handler{r: r, q: q}
+	apiHandler := &handler{r: r, q: q}
+
+	frontendHandler, err := frontend.NewHandler(q, r)
+	if err != nil {
+		return errors.Wrap(err, "error creating the frontend handler")
+	}
 
 	router := httprouter.New()
-	router.GET("/monitors/", api.Wrap(h.Monitors))
+	router.GET("/api/monitors/", api.Wrap(apiHandler.Monitors))
+	router.NotFound = frontendHandler
 
 	return http.ListenAndServe(address, router)
 }
