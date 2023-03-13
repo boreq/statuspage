@@ -26,7 +26,7 @@ body {
 
 header {
     text-align: center;
-    margin: 3rem 1rem;
+    margin: 3rem 0;
 
     .wrapper {
         img {
@@ -123,6 +123,18 @@ header {
 
                 &:hover {
                     background-color: $color-accent;
+                }
+            }
+
+            @media (max-width: 950px) {
+                .indicator {
+                    margin: 0 1px;
+                }
+            }
+
+            @media (max-width: 800px) {
+                .indicator {
+                    margin: 0;
                 }
             }
         }
