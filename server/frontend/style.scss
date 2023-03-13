@@ -4,6 +4,7 @@ $color-green: #00eb8b;
 $color-red: #F06292;
 $color-yellow: #FDD835;
 $color-grey: #8da2b5;
+$color-accent: #9b59b6;
 
 $font-weight-regular: 400;
 $font-weight-medium: 500;
@@ -119,6 +120,10 @@ header {
                 &:last-child {
                     margin-right: 0;
                 }
+
+                &:hover {
+                    background-color: $color-accent;
+                }
             }
         }
 
@@ -233,7 +238,7 @@ header {
     content: attr(tooltip);
     display: inline-block;
     position: absolute;
-    bottom: 100%;
+    bottom: 120%;
     background: #000;
     color: #fff;
     padding: .5rem;
