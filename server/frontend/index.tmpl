@@ -22,91 +22,98 @@
 </head>
 
 <body>
-    <header>
-        <div class="wrapper">
-            <img src="./assets/computr.jpeg">
-        </div>
-    </header>
+    <div class="content-wrapper">
+        <div class="content">
+            <header>
+                <div class="wrapper">
+                    <img src="./assets/computr.jpeg">
+                </div>
+            </header>
 
-    <div class="frame overall-status {{ if $all_operational }}green{{ else }}red{{ end }}">
-        <div class="row">
-            {{ if $all_operational }}
-                All Systems Operational
-            {{ else if $all_down }}
-                Experiencing An Outage
-            {{ else }}
-                Experiencing A Partial Outage
-            {{ end }}
-        </div>
-    </div>
+            <div class="frame overall-status {{ if $all_operational }}green{{ else }}red{{ end }}">
+                <div class="row">
+                    {{ if $all_operational }}
+                        All Systems Operational
+                    {{ else if $all_down }}
+                        Experiencing An Outage
+                    {{ else }}
+                        Experiencing A Partial Outage
+                    {{ end }}
+                </div>
+            </div>
 
 
-    <div class="wrapper">
-        <div class="frame">
-            <div class="monitors">
-                {{ range .Monitors }}
-                    <div class="row monitor">
+            <div class="wrapper">
+                <div class="frame">
+                    <div class="monitors">
+                        {{ range .Monitors }}
+                            <div class="row monitor">
 
-                        <div class="name">
-                            {{ .Name }}
-                        </div>
-
-                        <div class="uptime">
-                            {{ range .Uptimes }}
-                                <div class="indicator tooltip
-                                    {{- if .Uptime -}}
-                                        {{- if ge (DerefFloat64 .Uptime) 0.99 }}
-                                            green
-                                        {{- else }}
-                                            red
-                                        {{- end }}
-                                    {{- end -}}
-                                    " tooltip="{{ (Date .Date) }}
-                                    {{- if .Uptime }}
-                                        {{ (Percentage .Uptime) }}
-                                    {{- else }}
-                                        No data.
-                                    {{- end -}}
-                                ">
+                                <div class="name">
+                                    {{ .Name }}
                                 </div>
-                            {{ end }}
-                        </div>
 
-                        <div class="status {{ if and .Status (eq .Status.Status StatusUp) }}up{{ else if and .Status (eq .Status.Status StatusDown) }}down{{ else }}failure{{ end }}">
-                            <div class="label">
-                                {{ if .Status }}
-                                    {{ if eq .Status.Status StatusUp }}
-                                            Operational
-                                    {{ else if eq .Status.Status StatusDown }}
-                                            Down
-                                    {{ else if eq .Status.Status StatusFailure }}
-                                            Monitoring failure
+                                <div class="uptime">
+                                    {{ range .Uptimes }}
+                                        <div class="indicator tooltip
+                                            {{- if .Uptime -}}
+                                                {{- if ge (DerefFloat64 .Uptime) 0.99 }}
+                                                    green
+                                                {{- else }}
+                                                    red
+                                                {{- end }}
+                                            {{- end -}}
+                                            " tooltip="{{ (Date .Date) }}
+                                            {{- if .Uptime }}
+                                                {{ (Percentage .Uptime) }}
+                                            {{- else }}
+                                                No data.
+                                            {{- end -}}
+                                        ">
+                                        </div>
                                     {{ end }}
-                                {{ else }}
-                                        Unknown
-                                {{ end }}
-                            </div>
-                            <div class="blob"></div>
-                        </div>
+                                </div>
 
-                        <div class="timeline">
-                            <div class="time-past">
-                                {{ $.NumberOfDays }} days ago
-                            </div>
+                                <div class="status {{ if and .Status (eq .Status.Status StatusUp) }}up{{ else if and .Status (eq .Status.Status StatusDown) }}down{{ else }}failure{{ end }}">
+                                    <div class="label">
+                                        {{ if .Status }}
+                                            {{ if eq .Status.Status StatusUp }}
+                                                    Operational
+                                            {{ else if eq .Status.Status StatusDown }}
+                                                    Down
+                                            {{ else if eq .Status.Status StatusFailure }}
+                                                    Monitoring failure
+                                            {{ end }}
+                                        {{ else }}
+                                                Unknown
+                                        {{ end }}
+                                    </div>
+                                    <div class="blob"></div>
+                                </div>
 
-                            <div class="line">
-                            </div>
+                                <div class="timeline">
+                                    <div class="time-past">
+                                        {{ $.NumberOfDays }} days ago
+                                    </div>
 
-                            <div class="time-now">
-                                Today
+                                    <div class="line">
+                                    </div>
+
+                                    <div class="time-now">
+                                        Today
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        {{ else }}
+                            No monitors.
+                        {{ end }}
                     </div>
-                {{ else }}
-                    No monitors.
-                {{ end }}
+                </div>
             </div>
         </div>
+        <footer>
+            <a href="https://github.com/boreq/statuspage">github</a>
+        </footer>
     </div>
 </body>
 

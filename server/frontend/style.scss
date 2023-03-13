@@ -12,16 +12,40 @@ $font-weight-bold: 700;
 
 $border-radius: 4px;
 
-html {
-    max-width: 1000px;
-    margin: 0 auto;
+html, body {
     font-family: 'Roboto', sans-serif;
     font-weight: $font-weight-regular;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
-body {
-    padding: 1rem;
-    background-color: #fff;
+.content-wrapper {
+    min-height: 100%;
+}
+
+.content-wrapper {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    max-width: 1000px;
+    min-height: 100%;
+    margin: 0 auto;
+
+    >.content, >footer {
+        padding: 1rem;
+    }
+
+    >footer {
+        text-align: right;
+
+        a {
+            color: $color-grey;
+            text-decoration: none;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+    }
 }
 
 header {
